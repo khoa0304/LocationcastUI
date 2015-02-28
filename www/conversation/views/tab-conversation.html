@@ -1,0 +1,45 @@
+<ion-view view-title="Conversation"> 
+
+<ion-content class="padding">
+
+
+<div class="list card" >
+
+
+	<div class="item item-avatar">
+
+		
+		<button ng-click="getLocation()" class="btn btn-default">
+		 Find out where am I?
+		</button>
+		<p>   Your current location: {{longitude}} : {{latitude}}</p>
+		
+		
+		
+	</div>
+
+	<div class="item item-body">
+
+		<label class="item item-input"> 
+		
+		<textarea ng-model="$parent.content" rows="10" id="conversationContent"
+				placeholder="What is on your mind?"></textarea>
+
+		</p>
+		
+	
+		
+	</div>
+
+	<div class="item tabs tabs-secondary tabs-icon-left">
+			
+		<button class="button button-clear" ng-click="postConversation()">Post</button>
+	
+	</div>
+	
+	 
+</div>
+
+</ion-content> 
+
+</ion-view>

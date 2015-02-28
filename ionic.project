@@ -1,0 +1,8 @@
+{
+  "name": "IonicProject",
+  "app_id": "",
+  "proxies": [{
+    "path": "/LocationCast/rest/conversation/create",
+    "proxyUrl": "http://localhost:8080/LocationCast/rest/conversation/create"
+  }]
+}
