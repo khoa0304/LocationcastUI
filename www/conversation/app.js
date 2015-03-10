@@ -41,16 +41,26 @@ angular.module('starter', ['ionic','ngCordova','starter.controllers', 'starter.s
     templateUrl: "views/tabs.html"
   })
   
-  .state('tab.conversations', {
-      url: '/conversation',
+  .state('tab.postConversations', {
+      url: '/postConversation',
       views: {
-        'tab-conversation': {
-          templateUrl: 'views/tab-conversation.html',
-          controller: 'ConversationsCtrl'
+        'tab-postConversation': {
+          templateUrl: 'views/tab-postConversation.html',
+          controller: 'PostConversationsCtrl'
         }
       }
     })
+    
+  .state('tab.listConversations', {
+      url: '/listConversation',
+      views: {
+        'tab-listConversation': {
+          templateUrl: 'views/tab-listConversation.html',
+          controller: 'ListConversationsCtrl'
+        }
+      }
+   })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/conversation');
+  $urlRouterProvider.otherwise('/tab/postConversation');
 });

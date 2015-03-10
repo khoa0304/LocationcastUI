@@ -1,4 +1,4 @@
-<ion-view view-title="Conversation"> 
+<ion-view view-title="Post a Conversation"> 
 
 <ion-content class="padding">
 
@@ -14,26 +14,22 @@
 		</button>
 		<p>   Your current location: {{longitude}} : {{latitude}}</p>
 		
-		
-		
 	</div>
 
 	<div class="item item-body">
 
 		<label class="item item-input"> 
 		
-		<textarea ng-model="$parent.content" rows="10" id="conversationContent"
-				placeholder="What is on your mind?"></textarea>
+		<textarea ng-model="$parent.content" rows="5" id="conversationContent"
+				placeholder="What is on your mind?">
+	    </textarea>
 
 		</p>
-		
-	
-		
 	</div>
 
 	<div class="item tabs tabs-secondary tabs-icon-left">
 			
-		<button class="button button-clear" ng-click="postConversation()">Post</button>
+		<button class="button-icon button-medium button-stable" ng-click="postConversation()" ng-disabled="isPostButtonDisabled()">Post</button>
 	
 	</div>
 	

@@ -1,66 +1,125 @@
 var appControllers = angular.module('starter.controllers', [
-		'starter.services', 'Authentication','ngCordova']);
+		'starter.services', 'Authentication', 'ngCordova' ]);
 
-appControllers.controller('ConversationsCtrl',[
-                       						'Base64',
-                    						'LocationService',
-                    						'$scope',
-                    						'$http',
-                    						'$rootScope',
-                    						
-                    						function(Base64,LocationService, $scope, $http, $rootScope) {
-                       							
-	$scope.getLocation = function() {
+appControllers.controller('PostConversationsCtrl', [
+		'AuthenticationService',
+		'LocationService',
+		'$scope',
+		'$http',
+		'$rootScope',
 
-		var latLong = LocationService.getLatLong().then(function(latLong) {
-			$scope.latLong = latLong;
-			console.log('LatLong=');
-			console.log($scope.latLong);
-		},
+		function(AuthenticationService, LocationService, $scope, $http, $rootScope) {
 
-		function(error) {
-			alert(error);
-		})
-	};
+			
+			$scope.getLocation = function() {
 
-	$scope.postConversation = function() {
+				var latLong = LocationService.getLatLong().then(
+						function(latLong) {
+							$scope.latLong = latLong;
+							console.log('LatLong=');
+							console.log($scope.latLong);
+						},
 
-		var conversation = {};
+						function(error) {
+							alert(error);
+						})
+			};
 
-		conversation.content = {};
-		conversation.content.contentString = $scope.content;
-		conversation.longAndLat = [
-				$rootScope.longitude,
-				$rootScope.latitude ];
+			$scope.postConversation = function() {
 
-		var authdata = Base64.encode("khoa0304" + ':'
-				+ "welcome1");
+				var conversation = {};
 
-		$http.defaults.headers.common['authorization'] = 'Basic '
-				+ authdata;
+				conversation.content = {};
+				conversation.content.contentString = $scope.content;
+				conversation.longAndLat = [ $rootScope.longitude,
+						$rootScope.latitude ];
 
-		var responsePromise = $http
-				.post(
-						"/LocationCast/rest/conversation/create",
-						conversation, {});
+				AuthenticationService.SetCredentials("khoa0304", "welcome1");
+			
+				var responsePromise = $http.post(
+						"/LocationCast/rest/conversation/create", conversation,
+						{});
 
-		responsePromise
-				.success(function(dataFromServer,
-						status, headers, config) {
-					console
-							.log("--> Submitting Conversation passed. Status "
-									+ status);
+				responsePromise.success(function(dataFromServer, status,
+						headers, config) {
+					console.log("--> Submitting Conversation passed. Status "
+							+ status);
 
 					if (status == 201) {
-						$scope.status = " Status code return "
-								+ status;
+						$scope.status = " Status code return " + status;
 					}
 
-					
+					$scope.content = "";
 				});
-				responsePromise.error(function(data, status,headers, config) {
+				responsePromise.error(function(data, status, headers, config) {
 					console.log("--> Submitting Conversation failed.");
 				});
-	};
+			};
 
-}]);
+			$scope.isPostButtonDisabled = function() {
+				if ($scope.content == "" || $rootScope.longitude == undefined) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+		} ]);
+
+appControllers.controller('ListConversationsCtrl', [
+        'AuthenticationService',
+		'GetConversationService',
+		'LocationService',
+		'$scope',
+		'$http',
+		'$rootScope',
+		
+
+		function(AuthenticationService,GetConversationService,LocationService,$scope, $http, $rootScope) {
+
+
+			$scope.doRefresh = function() {
+
+				$scope.conversations = [];
+				var conversationProximity = $scope.conversationProximity;
+				
+				if ($rootScope.longitude == undefined || $rootScope.latitude == undefined){
+					$scope.getLocation(conversationProximity);
+				}
+				
+				else{
+					$scope.getConversation(conversationProximity);
+				}
+				
+				
+			};
+			
+			$scope.getLocation = function(conversationProximity) {
+
+				var latLong = LocationService.getLatLong().then(
+						function(latLong) {
+						
+							$scope.latLong = latLong;
+							console.log('LatLong=');
+							console.log($scope.latLong);
+							$scope.getConversation(conversationProximity);
+						},
+
+						function(error) {
+							alert(error);
+							
+						})
+			};
+
+
+			$scope.getConversation = function(conversationProximity){
+
+	        	AuthenticationService.SetCredentials("khoa0304", "welcome1");
+	        	
+				GetConversationService.GetConverseation(conversationProximity).then(
+						function(conversations) {
+							$scope.conversations = conversations;
+							$scope.$broadcast('scroll.refreshComplete');
+				});
+			};
+		} ]);

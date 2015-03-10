@@ -1,8 +1,13 @@
 {
-  "name": "IonicProject",
+  "name": "LocationcastUI",
   "app_id": "",
   "proxies": [{
     "path": "/LocationCast/rest/conversation/create",
     "proxyUrl": "http://localhost:8080/LocationCast/rest/conversation/create"
+  },
+
+  {
+    "path": "/LocationCast/rest/conversation/load/",
+    "proxyUrl": "http://localhost:8080/LocationCast/rest/conversation/load/"
   }]
 }
