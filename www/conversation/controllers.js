@@ -1,16 +1,16 @@
 var appControllers = angular.module('starter.controllers', [
-		'starter.services', 'Authentication', 'ngCordova' ]);
+		'starter.services', 'ngCordova' ]);
 
 appControllers.controller('PostConversationsCtrl', [
-		'AuthenticationService',
+		'PostConversationService',
 		'LocationService',
 		'$scope',
 		'$http',
 		'$rootScope',
 
-		function(AuthenticationService, LocationService, $scope, $http, $rootScope) {
+		function(PostConversationService, LocationService, $scope, $http, $rootScope) {
 
-			
+
 			$scope.getLocation = function() {
 
 				var latLong = LocationService.getLatLong().then(
@@ -18,42 +18,28 @@ appControllers.controller('PostConversationsCtrl', [
 							$scope.latLong = latLong;
 							console.log('LatLong=');
 							console.log($scope.latLong);
+						
 						},
 
 						function(error) {
 							alert(error);
 						})
 			};
-
+			
 			$scope.postConversation = function() {
 
-				var conversation = {};
-
-				conversation.content = {};
-				conversation.content.contentString = $scope.content;
-				conversation.longAndLat = [ $rootScope.longitude,
-						$rootScope.latitude ];
-
-				AuthenticationService.SetCredentials("khoa0304", "welcome1");
-			
-				var responsePromise = $http.post(
-						"/LocationCast/rest/conversation/create", conversation,
-						{});
-
-				responsePromise.success(function(dataFromServer, status,
-						headers, config) {
-					console.log("--> Submitting Conversation passed. Status "
-							+ status);
-
-					if (status == 201) {
-						$scope.status = " Status code return " + status;
-					}
-
-					$scope.content = "";
-				});
-				responsePromise.error(function(data, status, headers, config) {
-					console.log("--> Submitting Conversation failed.");
-				});
+				var submitResult = PostConversationService.
+					PostConverseation($scope.content,$rootScope.longitude,$rootScope.latitude).then(
+							
+					  function(submitResult){
+						  $scope.content = "";
+					  },
+					  function(error){
+						  alert("Failed to submit conversation. Please ensure your location is available and submit again!");
+					  }
+					)
+					
+				
 			};
 
 			$scope.isPostButtonDisabled = function() {
@@ -67,15 +53,12 @@ appControllers.controller('PostConversationsCtrl', [
 		} ]);
 
 appControllers.controller('ListConversationsCtrl', [
-        'AuthenticationService',
-		'GetConversationService',
+       'GetConversationService',
 		'LocationService',
 		'$scope',
 		'$http',
 		'$rootScope',
-		
-
-		function(AuthenticationService,GetConversationService,LocationService,$scope, $http, $rootScope) {
+		function(GetConversationService,LocationService,$scope, $http, $rootScope) {
 
 
 			$scope.doRefresh = function() {
@@ -98,7 +81,6 @@ appControllers.controller('ListConversationsCtrl', [
 
 				var latLong = LocationService.getLatLong().then(
 						function(latLong) {
-						
 							$scope.latLong = latLong;
 							console.log('LatLong=');
 							console.log($scope.latLong);
@@ -107,15 +89,12 @@ appControllers.controller('ListConversationsCtrl', [
 
 						function(error) {
 							alert(error);
-							
 						})
 			};
 
 
 			$scope.getConversation = function(conversationProximity){
-
-	        	AuthenticationService.SetCredentials("khoa0304", "welcome1");
-	        	
+				
 				GetConversationService.GetConverseation(conversationProximity).then(
 						function(conversations) {
 							$scope.conversations = conversations;

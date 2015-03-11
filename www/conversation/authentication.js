@@ -1,7 +1,8 @@
 'use strict';
   
-angular.module('Authentication',[])
-.factory('AuthenticationService',
+var authenticationFactory = angular.module('Authentication',[]);
+
+authenticationFactory.factory('AuthenticationService',
     ['Base64', '$http',  '$rootScope', '$timeout',
     
      function (Base64, $http, $rootScope, $timeout) {
@@ -50,10 +51,10 @@ angular.module('Authentication',[])
             $http.defaults.headers.common.Authorization = 'Basic ';
         };
   
-        return (AuthenticationService);
-    }])
+        return AuthenticationService;
+    }]);
   
-.factory('Base64', function () {
+authenticationFactory.factory('Base64', function () {
     /* jshint ignore:start */
   
     var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
